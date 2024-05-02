@@ -815,7 +815,7 @@ latex.summary <- function(dataset_path, model.type){
 }
 
 boxplot.pairwise <- function(dataset_path, method="all", y="coverage",
-                             width=7, height=4){
+                             width=7, height=4.4){
   
   all <- NULL
   
@@ -834,8 +834,15 @@ boxplot.pairwise <- function(dataset_path, method="all", y="coverage",
     all <- all[all$method==method,]
   }
   
-  my_comparisons <- list( c("ui", "mixed"), c("ui", "ud"),
-                          c("ud", "mixed"), c("uc","ui"))
+  # Rename models' names.
+  all$model[all$model == "mixed"] <- "MM"
+  all$model[all$model == "ud"] <- "UDM"
+  all$model[all$model == "ui"] <- "UIM"
+  all$model[all$model == "uc"] <- "UCM"
+  
+  
+  my_comparisons <- list( c("MM", "UDM"), c("MM", "UIM"),
+                          c("MM", "UCM"), c("UCM","UIM"))
   
   p <- ggboxplot(all, x = "model", y = y,
                  color = "model", palette = "jco") +
@@ -868,6 +875,12 @@ lolliplot.pairwise <- function(dataset_path, y="mean_setsize",
     tmp <- cbind(tmp,model=m)
     all <- rbind(all,tmp)
   }
+  
+  # Rename models' names.
+  all$model[all$model == "mixed"] <- "MM"
+  all$model[all$model == "ud"] <- "UDM"
+  all$model[all$model == "ui"] <- "UIM"
+  all$model[all$model == "uc"] <- "UCM"
   
   y.str <- gsub("mean_","",y)
   
